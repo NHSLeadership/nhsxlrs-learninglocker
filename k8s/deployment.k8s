@@ -1,0 +1,215 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+ name: '{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+spec:
+  replicas: 2
+  revisionHistoryLimit: 1
+  minReadySeconds: 120
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: '{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - '{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: rails
+          image: 
+          ports:
+            - name: rails
+              containerPort: 5000
+          resources:
+            requests:
+              memory: 2048Mi
+              cpu: 500m
+            limits:
+              memory: 4096Mi
+              cpu: 2000m
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: rails
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            failureThreshold: 18
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: rails
+            initialDelaySeconds: 120
+            periodSeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 2
+            failureThreshold: 18
+          env:
+            - name: ENVIRONMENT
+              value: "{ENVIRONMENT}"
+            - name: AWS_HOST_ENVIRONMENT
+              value: "{ENVIRONMENT}"
+            - name: SITE_NAME
+              value: "{SITENAME}"
+            - name: APP_DATABASE_ADAPTER
+              value: "postgresql"
+            - name: SITE_BRANCH
+              value: "{BRANCH}"
+            - name: BUILD
+              value: "{BUILD}"
+            - name: APP_DATABASE_HOST
+              value: "{PGSQL_HOST}"
+            - name: APP_DATABASE_USERNAME
+              value: "{PGSQL_USER}"
+            - name: APP_DATABASE_PASSWORD
+              value: "{PGSQL_PASS}"
+            - name: APP_DATABASE_NAME
+              value: "{PGSQL_DB}"
+            - name: APP_DATABASE_PORT
+              value: "{PGSQL_PORT}"
+            - name: DATABASE_URL
+              value: "postgres://{PGSQL_USER}:{PGSQL_PASS}@{PGSQL_HOST}:{PGSQL_PORT}/{PGSQL_DB}"
+      terminationGracePeriodSeconds: 20
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+ name: 'sidekiq-{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+spec:
+  replicas: 2
+  revisionHistoryLimit: 1
+  minReadySeconds: 120
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: 'sidekiq-{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - 'sidekiq-{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: rails
+          image: 
+          command: ["/start-worker.sh"]
+          resources:
+            requests:
+              memory: 2048Mi
+              cpu: 100m
+            limits:
+              memory: 4096Mi
+              cpu: 2000m
+          env:
+            - name: ENVIRONMENT
+              value: "{ENVIRONMENT}"
+            - name: AWS_HOST_ENVIRONMENT
+              value: "{ENVIRONMENT}"
+            - name: SITE_NAME
+              value: "{SITENAME}"
+            - name: APP_DATABASE_ADAPTER
+              value: "postgresql"
+            - name: SITE_BRANCH
+              value: "{BRANCH}"
+            - name: BUILD
+              value: "{BUILD}"
+            - name: APP_DATABASE_HOST
+              value: "{PGSQL_HOST}"
+            - name: APP_DATABASE_USERNAME
+              value: "{PGSQL_USER}"
+            - name: APP_DATABASE_PASSWORD
+              value: "{PGSQL_PASS}"
+            - name: APP_DATABASE_NAME
+              value: "{PGSQL_DB}"
+            - name: APP_DATABASE_PORT
+              value: "{PGSQL_PORT}"
+            - name: DATABASE_URL
+              value: "postgres://{PGSQL_USER}:{PGSQL_PASS}@{PGSQL_HOST}:{PGSQL_PORT}/{PGSQL_DB}"
+      terminationGracePeriodSeconds: 20
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+ name: 'cron-{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  minReadySeconds: 120
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: 'cron-{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - 'cron-{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: rails
+          image: 
+          command: ["/start-cron.sh"]
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 20m
+            limits:
+              memory: 4096Mi
+              cpu: 2000m
+          env:
+            - name: ENVIRONMENT
+              value: "{ENVIRONMENT}"
+            - name: AWS_HOST_ENVIRONMENT
+              value: "{ENVIRONMENT}"
+            - name: SITE_NAME
+              value: "{SITENAME}"
+            - name: APP_DATABASE_ADAPTER
+              value: "postgresql"
+            - name: SITE_BRANCH
+              value: "{BRANCH}"
+            - name: BUILD
+              value: "{BUILD}"
+            - name: APP_DATABASE_HOST
+              value: "{PGSQL_HOST}"
+            - name: APP_DATABASE_USERNAME
+              value: "{PGSQL_USER}"
+            - name: APP_DATABASE_PASSWORD
+              value: "{PGSQL_PASS}"
+            - name: APP_DATABASE_NAME
+              value: "{PGSQL_DB}"
+            - name: APP_DATABASE_PORT
+              value: "{PGSQL_PORT}"
+            - name: DATABASE_URL
+              value: "postgres://{PGSQL_USER}:{PGSQL_PASS}@{PGSQL_HOST}:{PGSQL_PORT}/{PGSQL_DB}"
+      terminationGracePeriodSeconds: 20
