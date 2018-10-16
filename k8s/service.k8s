@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: '{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+    primary: 'true'
+  domains:
+  - 'replace-this-domain.com'
+  name: 'nginx-php'
+spec:
+  ports:
+  - name: nginx
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: '{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+  sessionAffinity: None
+  type: NodePort
