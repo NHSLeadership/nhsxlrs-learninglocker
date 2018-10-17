@@ -1,1 +1,0 @@
-FROM sproutlabs/learninglocker:latest

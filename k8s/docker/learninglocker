@@ -1,1 +1,10 @@
-FROM sproutlabs/learninglocker:latest
+FROM node:8-alpine
+RUN apk add --no-cache git curl alpine-sdk python
+RUN npm install -g yarn pm2
+RUN pm2 install pm2-logrotate && pm2 set pm2-logrotate:compress true
+RUN git clone https://github.com/LearningLocker/learninglocker.git /src
+RUN cd /src && yarn install
+RUN cd /src && yarn build-all
+ADD /k8s/scripts/start-general.sh /start-general.sh
+ADD /env /src/.env
+CMD ["/start-general.sh"]
