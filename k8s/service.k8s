@@ -6,7 +6,7 @@ metadata:
     primary: 'true'
   domains:
   - 'replace-this-domain.com'
-  name: 'nginx-php'
+  name: 'learninglocker'
 spec:
   ports:
   - name: nginx
