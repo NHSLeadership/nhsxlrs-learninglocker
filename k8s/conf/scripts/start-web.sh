@@ -10,9 +10,9 @@ printf "\n\033[1;1mRunning Nginx PHP-FPM web mode\033[0m\n\n"
 # printf "%-30s %-30s\n" "Key" "Value"
 
 # Container info:
-printf "%-30s %-30s\n" "Site:" "$SITE_NAME"
-printf "%-30s %-30s\n" "Branch:" "$SITE_BRANCH"
-printf "%-30s %-30s\n" "Environment:" "$ENVIRONMENT"
+# printf "%-30s %-30s\n" "Site:" "$SITE_NAME"
+# printf "%-30s %-30s\n" "Branch:" "$SITE_BRANCH"
+# printf "%-30s %-30s\n" "Environment:" "$ENVIRONMENT"
 
 # Version numbers:
 printf "%-30s %-30s\n" "PHP Version:" "`php -r 'echo phpversion();'`"
