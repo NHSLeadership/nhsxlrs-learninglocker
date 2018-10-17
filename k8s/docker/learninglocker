@@ -8,4 +8,9 @@ RUN cd /src && yarn build-all
 ADD /k8s/scripts/start-general.sh /start-general.sh
 ADD /env /src/.env
 RUN chmod +x /start-general.sh
+# Install Nginx to front our stuff...
+RUN apk add --no-cache nginx supervisor
+ADD /k8s/conf/etc/nginx/nginx.conf /etc/nginx/nginx.conf
+ADD /k8s/conf/supervisor /etc/supervisord-enabled/
+ADD /k8s/conf/supervisor.conf /etc/supervisor.conf
 CMD ["/start-general.sh"]
