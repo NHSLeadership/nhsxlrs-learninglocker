@@ -7,4 +7,5 @@ RUN cd /src && yarn install
 RUN cd /src && yarn build-all
 ADD /k8s/scripts/start-general.sh /start-general.sh
 ADD /env /src/.env
+RUN chmod +x /start-general.sh
 CMD ["/start-general.sh"]
