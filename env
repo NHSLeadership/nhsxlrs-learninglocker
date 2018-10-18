@@ -164,7 +164,7 @@ FS_REPO=local
 # Local storage
 
 # Defaults to current working directory
-#FS_LOCAL_ENDPOINT=
+FS_LOCAL_ENDPOINT=/efs
 
 # AWS S3 config
 #FS_AWS_S3_ACCESS_KEY_ID=
