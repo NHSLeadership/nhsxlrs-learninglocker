@@ -76,7 +76,7 @@ REDIS_PREFIX=LEARNINGLOCKER
 
 # Enable/disable frameguard
 # Disabling this feature will allow your UI to be embedded (via iframe) into other hosts/domains
-#ENABLE_FRAMEGUARD=true
+ENABLE_FRAMEGUARD=false
 
 ###########
 # Logging #
