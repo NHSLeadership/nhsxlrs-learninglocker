@@ -1,7 +1,8 @@
 FROM node:8-alpine
 RUN apk add --no-cache git curl alpine-sdk python
 RUN npm install -g yarn
+RUN chmod +x /usr/local/bin/yarn
 RUN git clone https://github.com/LearningLocker/learninglocker.git /src
 RUN cd /src && yarn install
-RUN cd /src && yarn build-ui-server
-CMD ["node /src/ui/dist/server"]
+RUN cd /src && yarn build-api-server
+CMD ["/usr/local/bin/node /src/api/dist/server"]
