@@ -180,7 +180,7 @@ spec:
   template:
     metadata:
       labels:
-        app: 'worker-{{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+        app: 'worker-{SITENAME}-{BRANCH}-{ENVIRONMENT}'
     spec:
       affinity:
         podAntiAffinity:
@@ -190,7 +190,7 @@ spec:
               - key: app
                 operator: In
                 values:
-                - '{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+                - 'worker-{SITENAME}-{BRANCH}-{ENVIRONMENT}'
             topologyKey: "kubernetes.io/hostname"
       containers:
         - name: worker
