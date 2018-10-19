@@ -11,15 +11,12 @@ ADD /env /src/.env
 RUN chmod +x /start-general.sh
 
 # Learning Locker xAPI stuff
-RUN git clone https://github.com/LearningLocker/xapi-service.git /src-xapi
-RUN cd /src-xapi && yarn install --ignore-engines && yarn build
-ADD /env-xapi /src-xapi/.env
+#RUN git clone https://github.com/LearningLocker/xapi-service.git /src-xapi
+#RUN cd /src-xapi && yarn install --ignore-engines && yarn build
+#ADD /env-xapi /src-xapi/.env
 
 # Install Nginx to front our stuff...
-RUN apk add --no-cache nginx supervisor
-ADD /k8s/conf/etc/nginx/nginx.conf /etc/nginx/nginx.conf
-ADD /k8s/conf/etc/nginx/site.conf /etc/nginx/conf.d/site.conf
-RUN rm -f /etc/nginx/conf.d/default.conf
+RUN apk add --no-cache supervisor
 ADD /k8s/conf/supervisor /etc/supervisord-enabled/
 ADD /k8s/conf/supervisor.conf /etc/supervisor.conf
 CMD ["/start-general.sh"]

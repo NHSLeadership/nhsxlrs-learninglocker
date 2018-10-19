@@ -1,0 +1,7 @@
+FROM node:8-alpine
+# Install Nginx to front our stuff...
+RUN apk add --no-cache nginx
+ADD /k8s/conf/etc/nginx/nginx.conf /etc/nginx/nginx.conf
+ADD /k8s/conf/etc/nginx/site.conf /etc/nginx/conf.d/site.conf
+RUN rm -f /etc/nginx/conf.d/default.conf
+CMD ["/usr/sbin/nginx"]
