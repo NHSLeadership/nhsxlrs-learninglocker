@@ -5,4 +5,6 @@ RUN chmod +x /usr/local/bin/yarn
 RUN git clone https://github.com/LearningLocker/learninglocker.git /src
 RUN cd /src && yarn install
 RUN cd /src && yarn build-ui-server
-CMD ["/usr/local/bin/node", "/src/ui/dist/server"]
+ADD /k8s/conf/scripts/start-ui-server.sh /start-ui-server.sh
+RUN chmod +x /start-ui-server.sh
+CMD ["/start-ui-server.sh"]
