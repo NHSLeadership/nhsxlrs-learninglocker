@@ -163,3 +163,78 @@ spec:
             - name: DB_PORT
               value: "{MYSQL_PORT}"
       terminationGracePeriodSeconds: 20
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+ name: 'worker-{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+spec:
+  replicas: 1
+  revisionHistoryLimit: 1
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: 'worker-{{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - '{SITENAME}-{BRANCH}-{ENVIRONMENT}'
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: worker
+          image:
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 1024Mi
+              cpu: 500m
+          #livenessProbe:
+          #  httpGet:
+          #    path: /
+          #    port: nginx
+          #  initialDelaySeconds: 10
+          #  periodSeconds: 10
+          #readinessProbe:
+          #  httpGet:
+          #    path: /
+          #    port: nginx
+          #  initialDelaySeconds: 10
+          #  periodSeconds: 5
+          #  timeoutSeconds: 2
+          #  successThreshold: 2
+          env:
+            - name: ENVIRONMENT
+              value: "{ENVIRONMENT}"
+            - name: AWS_HOST_ENVIRONMENT
+              value: "{ENVIRONMENT}"
+            - name: SITE_NAME
+              value: "{SITENAME}"
+            - name: SITE_BRANCH
+              value: "{BRANCH}"
+            - name: DB_HOSTNAME
+              value: "{MYSQL_HOST}"
+            - name: DB_USERNAME
+              value: "{MYSQL_USER}"
+            - name: DB_PASSWORD
+              value: "{MYSQL_PASS}"
+            - name: DB_DATABASE
+              value: "{MYSQL_DB}"
+            - name: BUILD
+              value: "{BUILD}"
+            - name: DB_PORT
+              value: "{MYSQL_PORT}"
+      terminationGracePeriodSeconds: 20

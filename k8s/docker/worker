@@ -1,0 +1,11 @@
+FROM node:8-alpine
+RUN apk add --no-cache git curl alpine-sdk python
+RUN npm install -g yarn
+RUN chmod +x /usr/local/bin/yarn
+RUN git clone https://github.com/LearningLocker/learninglocker.git /src
+RUN cd /src && yarn install
+RUN cd /src && yarn build-worker-server
+ADD /env /src/.env
+ADD /k8s/conf/scripts/start-worker.sh /start-worker.sh
+RUN chmod +x /start-worker.sh
+CMD ["/start-worker.sh"]
