@@ -74,7 +74,7 @@ spec:
               value: "{BUILD}"
             - name: DB_PORT
               value: "{MYSQL_PORT}"
-        - name: learninglocker
+        - name: ui
           image: 
           resources:
             requests:
