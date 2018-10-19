@@ -5,4 +5,6 @@ RUN chmod +x /usr/local/bin/yarn
 RUN git clone https://github.com/LearningLocker/learninglocker.git /src
 RUN cd /src && yarn install
 RUN cd /src && yarn build-api-server
-CMD ["/usr/local/bin/node", "/src/api/dist/server"]
+ADD /k8s/conf/scripts/start-api-server.sh /start-api-server.sh
+RUN chmod +x /start-api-server.sh
+CMD ["/start-api-server.sh"]
