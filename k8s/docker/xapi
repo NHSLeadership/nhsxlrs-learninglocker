@@ -5,7 +5,6 @@ RUN chmod +x /usr/local/bin/yarn
 RUN git clone https://github.com/LearningLocker/xapi-service.git /src
 RUN cd /src && yarn install --ignore-engines
 RUN cd /src && yarn build
-ADD /env-xapi /src/.env
 ADD /k8s/conf/scripts/start-xapi.sh /start-xapi.sh
 RUN chmod +x /start-xapi.sh
 CMD ["/start-xapi.sh"]
