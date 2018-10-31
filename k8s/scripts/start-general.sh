@@ -8,6 +8,7 @@ sed -i -e "s#NEW_RELIC_LICENSE_KEY=#NEW_RELIC_LICENSE_KEY=$NEWRELIC_LICENSE_KEY#
 sed -i -e "s#NEWRELIC_API_NAME=#NEWRELIC_API_NAME=$SITE_NAME-$SITE_BRANCH-$ENVIRONMENT-API#g" /src/.env
 sed -i -e "s#NEWRELIC_UI_NAME=#NEWRELIC_API_NAME=$SITE_NAME-$SITE_BRANCH-$ENVIRONMENT-UI#g" /src/.env
 sed -i -e "s#MONGODB_PATH=mongodb://localhost:27017/learninglocker_v2#MONGODB_PATH=$MONGODB_PATH#g" /src/.env
+
 # xAPI
 sed -i -e "s#MONGO_URL=mongodb://localhost:27017/learninglocker_v2#MONGO_URL=$MONGODB_PATH#g" /src-xapi/.env
 sed -i -e "s#REDIS_PREFIX=LEARNINGLOCKER#REDIS_PREFIX=$SITE_BRANCH#g" /src-xapi/.env
